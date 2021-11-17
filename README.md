@@ -8,12 +8,23 @@ bot command (`.stats`) ~~or automatically in a set interval~~ (TODO).
 
 Setting up this bot is done through the `.env` environment variables.
 
+## Contents
+- [Overview](#overview)
+- [Setting Up](#setup)
+  - [`axyl-stats.py`](#axyl-bot)
+  - [`stats-database.py`](#axyl-db)
+- [Running The Bot](#run)
+- [Testing](#testing)
+- [License](#license)
+
+<a id="overview"></a>
 ## Overview
 
 Right now, the bot's functionality is like this:
 
 ![axyl-stats image](https://i.imgur.com/LNjFNpE.png)
 
+<a id="setup"></a>
 ## Setting Up
 
 `Python 3.8` and above is required. PostgreSQL must also be installed, set
@@ -38,6 +49,7 @@ in there.
 
 The environment variables that axyl-stats will use are:
 
+<a id="axyl-bot"></a>
 ## `axyl-stats.py`
 
 ### Required
@@ -58,6 +70,7 @@ channels are separated with a comma (,).
 - `DB_HOST` (default `127.0.0.1`): The host IP address.
 - `DB_PORT` (default `5432`): The port of the DB.
 
+<a id="axyl-db"></a>
 ## `stats-database.py`
 
 To run the database testing, you must also put in the `.env` file:
@@ -95,6 +108,7 @@ DB_USER=archie
 DB_PASS=hunter2
 ```
 
+<a id="run"></a>
 ## Running The Bot
 
 To run the bot:
