@@ -8,6 +8,8 @@ bot command (`.stats`) ~~or automatically in a set interval~~ (TODO).
 
 Setting up this bot is done through the `.env` environment variables.
 
+![Python](https://img.shields.io/badge/python-%233776AB.svg?style=for-the-badge&logo=python&logoColor=white) ![Postgres](https://img.shields.io/badge/postgresql-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white) [![Discord](https://img.shields.io/badge/hikari-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)](https://www.hikari-py.dev/)
+
 ## Contents
 - [Overview](#overview)
 - [Setting Up](#setup)
