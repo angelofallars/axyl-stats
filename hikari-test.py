@@ -1,8 +1,15 @@
 import os
-import dotenv
 import hikari
+from dotenv import load_dotenv
 
-bot = hikari.GatewayBot(token="...")
+load_dotenv()
+
+bot_token = os.getenv("BOT_TOKEN", None)
+
+if bot_token is None:
+    raise Exception("No BOT_TOKEN set in the .env file.")
+
+bot = hikari.GatewayBot(token=bot_token)
 
 
 @bot.listen()
@@ -16,4 +23,11 @@ async def ping(event: hikari.GuildMessageCreateEvent) -> None:
     if event.content.startswith("hk.ping"):
         await event.message.respond("Pong!")
 
-bot.run()
+
+def main() -> int:
+    bot.run()
+    return 0
+
+
+if __name__ == "__main__":
+    exit(main())
