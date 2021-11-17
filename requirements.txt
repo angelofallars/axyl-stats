@@ -8,6 +8,7 @@ colorlog==6.4.1
 hikari==2.0.0.dev103
 idna==3.3
 multidict==5.2.0
+psycopg2==2.9.2
 pure25519==0.0.1
 python-dotenv==0.19.2
 requests==2.26.0
