@@ -1,5 +1,6 @@
 import os
 import time
+from datetime import datetime
 
 import psycopg2 as pgres
 import requests
@@ -75,6 +76,8 @@ def main() -> int:
     conn.commit()
 
     while True:
+        current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
         # Fetch data from the GitHub api
         download_count = fetch_download_count(REPO_OWNER, REPO_NAME, headers)
 
@@ -84,7 +87,9 @@ def main() -> int:
                            VALUES (%s, %s, CURRENT_TIMESTAMP(0))""",
                         (repo_name_combined, download_count,))
             conn.commit()
-            print("Updated the database with new data.")
+
+            print(f"DB updated for `{repo_name_combined}` - {current_date}")
+            print(f"Download count: {download_count}")
 
         # Wait every (interval) minutes
         time.sleep(DB_UPDATE_INTERVAL * 60)
