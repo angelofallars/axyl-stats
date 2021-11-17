@@ -1,6 +1,7 @@
 import os
 
 import hikari
+import psycopg2 as pgres
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -31,7 +32,19 @@ elif REPO_NAME is None:
 elif COUNTER_CHANNEL is None:
     raise Exception("No COUNTER_CHANNEL set in the .env file.")
 
+repo_name_combined = REPO_OWNER + '/' + REPO_NAME
+
 bot = hikari.GatewayBot(token=BOT_TOKEN)
+
+# Initialize the connection to the PostgreSQL db
+conn = pgres.connect(database=DB_NAME,
+                     user=DB_USER,
+                     password=DB_PASS,
+                     host=DB_HOST,
+                     port=DB_PORT)
+
+# Initialize the cursor
+cur = conn.cursor()
 
 
 @bot.listen()
@@ -40,13 +53,14 @@ async def fetch_download_stats(event: hikari.GuildMessageCreateEvent) -> None:
         return
 
     if event.content.startswith(".stats"):
-        # TODO: Fetch the latest download info stats from the database
+        # Fetch the latest download info stats from the database
+        cur.execute("""SELECT downloads FROM download_stats
+                       ORDER BY date DESC LIMIT 1;""")
 
-        # SELECT downloads FROM download_stats ORDER BY date DESC LIMIT 1;
-        total_download_count = 0
+        total_download_count = cur.fetchone()[0]
 
-        await event.message.respond(f"{REPO_NAME} has received over \
-{total_download_count} downloads!")
+        await event.message.respond(f"`{repo_name_combined}` has received \
+over {total_download_count} downloads!")
 
 
 def main(debug=False) -> int:
