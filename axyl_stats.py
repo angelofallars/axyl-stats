@@ -26,15 +26,13 @@ bot = hikari.GatewayBot(token=TOKEN)
 
 
 @bot.listen()
-async def ping(event: hikari.GuildMessageCreateEvent) -> None:
-    # If a non-bot user sends a message "hk.ping", respond with "Pong!"
-    # We check there is actually content first, if no message content exists,
-    # we would get `None' here.
+async def fetch_download_stats(event: hikari.GuildMessageCreateEvent) -> None:
     if event.is_bot or not event.content:
         return
 
-    if event.content.startswith("hk.ping"):
-        await event.message.respond("Pong!")
+    if event.content.startswith(".stats"):
+        # TODO: Fetch the latest download info stats from a PostgreSQL db
+        await event.message.respond("AXYL STATS")
 
 
 def main(debug=False) -> int:
