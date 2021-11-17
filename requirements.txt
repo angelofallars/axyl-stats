@@ -1,0 +1,16 @@
+aiohttp==3.7.4.post0
+async-timeout==3.0.1
+attrs==21.2.0
+certifi==2021.10.8
+chardet==4.0.0
+charset-normalizer==2.0.7
+colorlog==6.4.1
+hikari==2.0.0.dev103
+idna==3.3
+multidict==5.2.0
+pure25519==0.0.1
+python-dotenv==0.19.2
+requests==2.26.0
+typing_extensions==4.0.0
+urllib3==1.26.7
+yarl==1.7.2
