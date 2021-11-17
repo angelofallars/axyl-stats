@@ -51,3 +51,8 @@ COUNTER_CHANNEL=axyl-statistics
 ```
 
 After you're done setting up, run the Discord bot with `python3 axyl_stats.py`.
+
+## Testing
+
+To be able to unit test the bot, you must also specify a `TEST_BOT_TOKEN` in the .env
+file.
