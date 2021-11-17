@@ -1,6 +1,6 @@
-# axyl-stats
+<h1 align=center>📈 axyl-stats</h1>
 
-`axyl-stats` is a Discord bot made with Python (with the Hikari API wrapper) and PostgreSQL,
+`axyl-stats` is a Discord bot made with **Python** (with the Hikari API wrapper) and **PostgreSQL**,
 used as a download counter for a GitHub repo.
 
 This bot is used to check the download stats of a particular repo either with a
@@ -22,7 +22,9 @@ managing the database table.
 
 First, clone this repo:
 
-`git clone https://github.com/angelofallars/axyl-stats`
+```bash
+git clone https://github.com/angelofallars/axyl-stats
+```
 
 Then, change directories into the repo and install the required dependencies:
 
@@ -36,6 +38,8 @@ in there.
 
 The environment variables that axyl-stats will use are:
 
+## `axyl-stats.py`
+
 ### Required
 - `BOT_TOKEN`: The Discord bot's API token. Make a new Discord application in
 the [Discord Dev Portal](https://discord.com/developers) and create a bot for
@@ -43,17 +47,18 @@ it. You will see the copyable token.
 - `REPO_OWNER`: The owner of the repo.
 - `REPO_NAME`: The name of the repo.
 - `DB_NAME`: The database to fetch data from.
+  - You must create a database in `PostgreSQL` first with the name `DB_NAME` before you can run this app.
 - `COUNTER_CHANNEL`: The Discord channel(s) to send automated statistics to. Multiple
 channels are separated with a comma (,).
 
 ### Optional
 - `INTERVAL` (default `60`): The interval in minutes in which the bot will fetch the download stats.
-- `DB_USER`: The user that will log in
-- `DB_PASS`: The database password
-- `DB_HOST` (default `127.0.0.1`): The host IP address
-- `DB_PORT` (default `5432`): The port of the PostgreSQL database
+- `DB_USER`: The user logging into the DB.
+- `DB_PASS`: The DB password.
+- `DB_HOST` (default `127.0.0.1`): The host IP address.
+- `DB_PORT` (default `5432`): The port of the DB.
 
-## Database
+## `stats-database.py`
 
 To run the database testing, you must also put in the `.env` file:
 
@@ -72,7 +77,7 @@ have an API key, you'll be limited to 60 requests per hour.
 - `DB_HOST`: Ditto.
 - `DB_PORT`: Ditto.
 - `DB_UPDATE_INTERVAL` (default `5`): The interval (in minutes) to update the
-database
+database.
 
 ## `.env` example
 
@@ -104,8 +109,8 @@ python3 stats_database.py
 
 ## Testing
 
-To be able to unit test the bot, you must also specify a `TEST_BOT_TOKEN` in the .env
-file.
+~~To be able to unit test the bot, you must also specify a `TEST_BOT_TOKEN` in the .env
+file.~~ (Tests not yet implemented)
 
 ## License
 
