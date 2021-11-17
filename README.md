@@ -3,12 +3,15 @@
 Axyl Stats is a Discord bot made with Hikari, used as a download counter for a
 GitHub repo.
 
-This bot will periodically fetch the download stats about a GitHub repo and print
-it in a channel. The interval, repo owner and repo name to fetch is set in the environment variables.
+This bot is used to check the download stats of a particular repo either with a
+bot command (`.stats`) or automatically in a set interval.
+
+The interval, repo owner and repo name to fetch is set in the environment variables.
 
 ## Setting Up
 
-`Python 3.8` and above is required.
+`Python 3.8` and above is required. PostgreSQL must also be installed and set
+up.
 
 First, clone this repo:
 
@@ -56,3 +59,24 @@ After you're done setting up, run the Discord bot with `python3 axyl_stats.py`.
 
 To be able to unit test the bot, you must also specify a `TEST_BOT_TOKEN` in the .env
 file.
+
+## Database
+
+To run the database testing, you must also put in the `.env` file:
+
+### Required
+
+- `DB_NAME`: The database to log to
+have an API key, you'll be limited to 60 requests per hour.
+- `REPO_OWNER`: Ditto.
+- `REPO_NAME`: Ditto.
+
+### Optional
+
+- `GITHUB_API_KEY` (optional): Ditto.
+- `DB_USER`: The user that will log in
+- `DB_PASS`: The database password
+- `DB_HOST` (default `127.0.0.1`): The host IP address
+- `DB_PORT` (default `5432`): The port of the PostgreSQL database
+- `DB_UPDATE_INTERVAL` (default `5`): The interval (in minutes) to update the
+database
