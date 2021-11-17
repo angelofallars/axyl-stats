@@ -1,3 +1,5 @@
+"""Periodically fetch the download count of a repo every (INTERVAL) minutes,
+   and store it in a PostgreSQL database"""
 import os
 import time
 from datetime import datetime
@@ -31,22 +33,6 @@ elif GITHUB_API_KEY is None:
     print("Warning: No GitHub API key. You will be limited to 60 requests per \
 hour.")
 
-headers = {}
-if GITHUB_API_KEY:
-    headers["Authorization"] = f"token {GITHUB_API_KEY}"
-
-repo_name_combined = REPO_OWNER + '/' + REPO_NAME
-
-# Initialize the connection to the PostgreSQL db
-conn = pgres.connect(database=DB_NAME,
-                     user=DB_USER,
-                     password=DB_PASS,
-                     host=DB_HOST,
-                     port=DB_PORT)
-
-# Initialize the cursor
-cur = conn.cursor()
-
 
 def fetch_download_count(repo_owner: str,
                          repo_name: str,
@@ -68,6 +54,21 @@ def fetch_download_count(repo_owner: str,
 
 
 def main() -> int:
+    headers = {}
+    if GITHUB_API_KEY:
+        headers["Authorization"] = f"token {GITHUB_API_KEY}"
+
+    repo_name_combined = REPO_OWNER + '/' + REPO_NAME
+
+    # Initialize the connection to the PostgreSQL db
+    conn = pgres.connect(database=DB_NAME,
+                         user=DB_USER,
+                         password=DB_PASS,
+                         host=DB_HOST,
+                         port=DB_PORT)
+
+    # Initialize the cursor
+    cur = conn.cursor()
 
     # Create the table if it didn't exist
     cur.execute("""CREATE TABLE IF NOT EXISTS download_stats
@@ -93,6 +94,8 @@ def main() -> int:
 
             print(f"DB updated for `{repo_name_combined}` - {current_date}")
             print(f"Download count: {download_count}")
+        else:
+            print(f"Couldn't fetch download count - {current_date}")
 
         # Wait every (interval) minutes
         time.sleep(DB_UPDATE_INTERVAL * 60)
