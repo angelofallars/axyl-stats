@@ -5,12 +5,15 @@ import requests
 from dotenv import load_dotenv
 
 load_dotenv()
+# Required .env vars
 TOKEN = os.getenv("BOT_TOKEN", None)
 REPO_OWNER = os.getenv("REPO_OWNER", None)
 REPO_NAME = os.getenv("REPO_NAME", None)
-INTERVAL = os.getenv("INTERVAL", 60)
 COUNTER_CHANNEL = os.getenv("COUNTER_CHANNEL", None)
-GITHUB_API_KEY = os.getenv("GITHUB_API_KEY")
+
+# Optional .env vars
+INTERVAL = os.getenv("INTERVAL", 60)
+GITHUB_API_KEY = os.getenv("GITHUB_API_KEY", None)
 
 if TOKEN is None:
     raise Exception("No BOT_TOKEN set in the .env file.")

@@ -7,15 +7,18 @@ import requests
 from dotenv import load_dotenv
 
 load_dotenv()
+# Required .env vars
 DB_NAME = os.getenv("DB_NAME", None)
+REPO_OWNER = os.getenv("REPO_OWNER", None)
+REPO_NAME = os.getenv("REPO_NAME", None)
+
+# Optional .env vars
 DB_USER = os.getenv("DB_USER", None)
 DB_PASS = os.getenv("DB_PASS", None)
 DB_HOST = os.getenv("DB_HOST", "127.0.0.1")
 DB_PORT = os.getenv("DB_PORT", "5432")
 DB_UPDATE_INTERVAL = int(os.getenv("DB_UPDATE_INTERVAL", 5))
 
-REPO_OWNER = os.getenv("REPO_OWNER", None)
-REPO_NAME = os.getenv("REPO_NAME", None)
 GITHUB_API_KEY = os.getenv("GITHUB_API_KEY")
 
 if DB_NAME is None:
