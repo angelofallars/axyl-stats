@@ -1,5 +1,7 @@
 import os
+
 import hikari
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -23,6 +25,8 @@ elif GITHUB_API_KEY is None:
 hour.")
 
 bot = hikari.GatewayBot(token=TOKEN)
+request_link = 'https://api.github.com/repos/'\
+               + REPO_OWNER + '/' + REPO_NAME + '/releases'
 
 
 @bot.listen()
@@ -31,8 +35,18 @@ async def fetch_download_stats(event: hikari.GuildMessageCreateEvent) -> None:
         return
 
     if event.content.startswith(".stats"):
-        # TODO: Fetch the latest download info stats from a PostgreSQL db
-        await event.message.respond("AXYL STATS")
+        # TODO: Fetch the latest download info stats from the GitHub API
+        total_download_count = 0
+
+        r = requests.get(request_link)
+        releases = r.json()
+
+        for release in releases:
+            if "assets" in release:
+                total_download_count += release["assets"][0]["download_count"]
+
+        await event.message.respond(f"{REPO_NAME} has received over \
+{total_download_count} downloads!")
 
 
 def main(debug=False) -> int:
