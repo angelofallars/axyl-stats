@@ -3,12 +3,26 @@ import hikari
 from dotenv import load_dotenv
 
 load_dotenv()
-bot_token = os.getenv("BOT_TOKEN", None)
+TOKEN = os.getenv("BOT_TOKEN", None)
+REPO_OWNER = os.getenv("REPO_OWNER", None)
+REPO_NAME = os.getenv("REPO_NAME", None)
+INTERVAL = os.getenv("INTERVAL", 60)
+COUNTER_CHANNEL = os.getenv("COUNTER_CHANNEL", None)
+GITHUB_API_KEY = os.getenv("GITHUB_API_KEY")
 
-if bot_token is None:
+if TOKEN is None:
     raise Exception("No BOT_TOKEN set in the .env file.")
+elif REPO_OWNER is None:
+    raise Exception("No REPO_OWNER set in the .env file.")
+elif REPO_NAME is None:
+    raise Exception("No REPO_NAME set in the .env file.")
+elif COUNTER_CHANNEL is None:
+    raise Exception("No COUNTER_CHANNEL set in the .env file.")
+elif GITHUB_API_KEY is None:
+    print("Warning: No GitHub API key. You will be limited to 60 requests per \
+hour.")
 
-bot = hikari.GatewayBot(token=bot_token)
+bot = hikari.GatewayBot(token=TOKEN)
 
 
 @bot.listen()
@@ -23,8 +37,11 @@ async def ping(event: hikari.GuildMessageCreateEvent) -> None:
         await event.message.respond("Pong!")
 
 
-def main() -> int:
-    bot.run()
+def main(debug=False) -> int:
+
+    if not debug:
+        bot.run()
+
     return 0
 
 
