@@ -31,6 +31,8 @@ headers = {}
 if GITHUB_API_KEY:
     headers["Authorization"] = f"token {GITHUB_API_KEY}"
 
+repo_name_combined = REPO_OWNER + '/' + REPO_NAME
+
 # Initialize the connection to the PostgreSQL db
 conn = pgres.connect(database=DB_NAME,
                      user=DB_USER,
@@ -66,6 +68,7 @@ def main() -> int:
     # Create the table if it didn't exist
     cur.execute("""CREATE TABLE IF NOT EXISTS download_stats
                    (
+                    repo text,
                     downloads integer,
                     date timestamp
                    )""")
@@ -77,9 +80,9 @@ def main() -> int:
 
         # Insert into PostgreSQL table
         if download_count is not None:
-            cur.execute("""INSERT INTO download_stats (downloads, date)
-                           VALUES (%s, CURRENT_TIMESTAMP(0))""",
-                        (download_count,))
+            cur.execute("""INSERT INTO download_stats (repo, downloads, date)
+                           VALUES (%s, %s, CURRENT_TIMESTAMP(0))""",
+                        (repo_name_combined, download_count,))
             conn.commit()
             print("Updated the database with new data.")
 
