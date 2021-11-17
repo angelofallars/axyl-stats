@@ -10,11 +10,20 @@ COUNTER_CHANNEL = os.getenv("COUNTER_CHANNEL", None)
 REPO_OWNER = os.getenv("REPO_OWNER", None)
 REPO_NAME = os.getenv("REPO_NAME", None)
 
+DB_NAME = os.getenv("DB_NAME", None)
+
 # Optional .env vars
 INTERVAL = os.getenv("INTERVAL", 60)
 
+DB_USER = os.getenv("DB_USER", None)
+DB_PASS = os.getenv("DB_PASS", None)
+DB_HOST = os.getenv("DB_HOST", "127.0.0.1")
+DB_PORT = os.getenv("DB_PORT", "5432")
+
 if BOT_TOKEN is None:
     raise Exception("No BOT_TOKEN set in the .env file.")
+elif DB_NAME is None:
+    raise Exception("Database name (DB_NAME) not set in the '.env' file.")
 elif REPO_OWNER is None:
     raise Exception("No REPO_OWNER set in the .env file.")
 elif REPO_NAME is None:
@@ -32,6 +41,8 @@ async def fetch_download_stats(event: hikari.GuildMessageCreateEvent) -> None:
 
     if event.content.startswith(".stats"):
         # TODO: Fetch the latest download info stats from the database
+
+        # SELECT downloads FROM download_stats ORDER BY date DESC LIMIT 1;
         total_download_count = 0
 
         await event.message.respond(f"{REPO_NAME} has received over \
