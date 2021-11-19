@@ -33,7 +33,7 @@ elif REPO_NAME is None:
 elif COUNTER_CHANNEL is None:
     raise Exception("No COUNTER_CHANNEL set in the .env file.")
 
-repo_name_combined = REPO_OWNER + '/' + REPO_NAME
+repo_full_name = REPO_OWNER + '/' + REPO_NAME
 
 bot = hikari.GatewayBot(token=BOT_TOKEN)
 
@@ -116,7 +116,7 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
         if args[1] in info_commands:
             await event.message.respond(info_commands[args[1]]
                                         .format(
-                repo_name=repo_name_combined,
+                repo_name=repo_full_name,
                 total_downloads=total_downloads,
                 latest_downloads=latest_downloads,
                 stars=stars,
