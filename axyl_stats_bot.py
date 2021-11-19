@@ -57,8 +57,8 @@ def fetch_latest_db_stats(cursor: pgres.extensions.cursor) \
 
     cursor.execute("""SELECT total_downloads, latest_downloads,
                           stars, watchers, forks
-                   FROM repo_stats
-                   ORDER BY date DESC LIMIT 1;""")
+                      FROM repo_stats
+                      ORDER BY date DESC LIMIT 1;""")
 
     (total_downloads,
      latest_downloads,
