@@ -38,14 +38,14 @@ repo_name_combined = REPO_OWNER + '/' + REPO_NAME
 bot = hikari.GatewayBot(token=BOT_TOKEN)
 
 # Initialize the connection to the PostgreSQL db
-conn = pgres.connect(database=DB_NAME,
-                     user=DB_USER,
-                     password=DB_PASS,
-                     host=DB_HOST,
-                     port=DB_PORT)
+connection = pgres.connect(database=DB_NAME,
+                           user=DB_USER,
+                           password=DB_PASS,
+                           host=DB_HOST,
+                           port=DB_PORT)
 
 # Initialize the cursor
-cur = conn.cursor()
+cursor = connection.cursor()
 
 
 def unknown_command() -> str:
@@ -84,7 +84,7 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
          latest_downloads,
          stars,
          watchers,
-         forks) = fetch_latest_db_stats(cur)
+         forks) = fetch_latest_db_stats(cursor)
 
         if args[1] == "stats":
 
