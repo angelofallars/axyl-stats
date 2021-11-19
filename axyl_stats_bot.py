@@ -79,7 +79,6 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
     args = event.content[1:].split()
 
     if len(args) > 1:
-        # Fetch the latest download info stats from the database
         (total_downloads,
          latest_downloads,
          stars,
