@@ -74,7 +74,11 @@ def main() -> int:
     cur.execute("""CREATE TABLE IF NOT EXISTS download_stats
                    (
                     repo text,
-                    downloads integer,
+                    total_downloads integer,
+                    latest_downloads integer,
+                    star_count integer,
+                    fork_count integer,
+                    watcher_count integer,
                     date timestamp
                    )""")
     conn.commit()
@@ -87,8 +91,10 @@ def main() -> int:
 
         # Insert into PostgreSQL table
         if download_count is not None:
-            cur.execute("""INSERT INTO download_stats (repo, downloads, date)
-                           VALUES (%s, %s, CURRENT_TIMESTAMP(0))""",
+            cur.execute("""INSERT INTO download_stats
+                           (repo, total_downloads, date)
+                           VALUES
+                           (%s, %s, CURRENT_TIMESTAMP(0))""",
                         (repo_name_combined, download_count,))
             conn.commit()
 
