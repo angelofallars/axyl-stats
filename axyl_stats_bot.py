@@ -15,7 +15,7 @@ DB_NAME = os.getenv("DB_NAME", None)
 
 # Optional .env vars
 INTERVAL = os.getenv("INTERVAL", 60)
-PREFIX = os.getenv("BOT_PREFIX", ".axyl")
+PREFIX = os.getenv("BOT_PREFIX", ".stats")
 
 DB_USER = os.getenv("DB_USER", None)
 DB_PASS = os.getenv("DB_PASS", None)

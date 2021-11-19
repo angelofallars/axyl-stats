@@ -69,7 +69,7 @@ it. You will see the copyable token.
 channels are separated with a comma (,).
 
 ### Optional
-- `BOT_PREFIX` (default `.axyl`): The prefix of the bot for commands
+- `BOT_PREFIX` (default `.stats`): The prefix of the bot for commands
 - `INTERVAL` (default `60`): The interval in minutes in which the bot will fetch the download stats.
 - `DB_USER`: The user logging into the DB.
 - `DB_PASS`: The DB password.
