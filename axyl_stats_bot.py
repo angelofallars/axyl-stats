@@ -54,7 +54,7 @@ async def fetch_download_stats(event: hikari.GuildMessageCreateEvent) -> None:
 
     if event.content.startswith(".stats"):
         # Fetch the latest download info stats from the database
-        cur.execute("""SELECT downloads FROM download_stats
+        cur.execute("""SELECT total_downloads FROM repo_stats
                        ORDER BY date DESC LIMIT 1;""")
 
         total_download_count = cur.fetchone()[0]
