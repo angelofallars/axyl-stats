@@ -52,6 +52,23 @@ def unknown_command() -> str:
     return f"❓ Unknown command. Try `{PREFIX} help` for the list of commands."
 
 
+def fetch_latest_db_stats(cursor: pgres.extensions.cursor) \
+     -> tuple[int, int, int, int, int]:
+
+    cursor.execute("""SELECT total_downloads, latest_downloads,
+                          stars, watchers, forks
+                   FROM repo_stats
+                   ORDER BY date DESC LIMIT 1;""")
+
+    (total_downloads,
+     latest_downloads,
+     stars,
+     watchers,
+     forks) = cursor.fetchone()
+
+    return total_downloads, latest_downloads, stars, watchers, forks
+
+
 @bot.listen()
 async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
     if (event.is_bot or not
@@ -62,22 +79,19 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
     args = event.content[1:].split()
 
     if len(args) > 1:
-        if args[1] == "stats":
-            # Fetch the latest download info stats from the database
-            cur.execute("""SELECT total_downloads, latest_downloads,
-                                  stars, watchers, forks
-                           FROM repo_stats
-                           ORDER BY date DESC LIMIT 1;""")
+        # Fetch the latest download info stats from the database
+        (total_downloads,
+         latest_downloads,
+         stars,
+         watchers,
+         forks) = fetch_latest_db_stats(cur)
 
-            (total_downloads,
-             latest_downloads,
-             stars,
-             watchers,
-             forks) = cur.fetchone()
+        if args[1] == "stats":
 
             await event.message.respond(
                   f"""`{repo_name_combined}` has received over **{total_downloads}** downloads!
 The latest release got over **{latest_downloads}** downloads!""")
+
         else:
             await event.message.respond(unknown_command())
 
