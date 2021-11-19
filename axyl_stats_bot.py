@@ -86,8 +86,7 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
          watchers,
          forks) = fetch_latest_db_stats(cursor)
 
-        if args[1] == "stats":
-
+        if args[1] in ("stats", "downloads"):
             await event.message.respond(
                   f"""`{repo_name_combined}` has received over **{total_downloads}** downloads!
 The latest release got over **{latest_downloads}** downloads!""")
