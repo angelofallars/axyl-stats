@@ -48,6 +48,10 @@ conn = pgres.connect(database=DB_NAME,
 cur = conn.cursor()
 
 
+def unknown_command() -> str:
+    return f"❓ Unknown command. Try `{PREFIX} help` for the list of commands."
+
+
 @bot.listen()
 async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
     if (event.is_bot or not
@@ -74,6 +78,11 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
             await event.message.respond(
                   f"""`{repo_name_combined}` has received over **{total_downloads}** downloads!
 The latest release got over **{latest_downloads}** downloads!""")
+        else:
+            await event.message.respond(unknown_command())
+
+    else:
+        await event.message.respond(unknown_command())
 
 
 def main(debug=False) -> int:
