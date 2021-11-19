@@ -76,6 +76,18 @@ info_commands = {
                  }
 
 
+def list_help_commands(commands: dict, prefix: str) -> str:
+    help_str = "🔎 List of commands:\n"
+
+    for command_name in commands:
+        help_str += f"`{prefix} {command_name}`\n"
+
+    # Strip the last new line
+    help_str = help_str.rstrip("\n")
+
+    return help_str
+
+
 def unknown_command() -> str:
     return f"❓ Unknown command. Try `{PREFIX} help` for the list of commands."
 
@@ -123,6 +135,10 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
                 watchers=watchers,
                 forks=forks,
                 ))
+
+        elif args[1] == "help":
+            await event.message.respond(list_help_commands(info_commands,
+                                                           PREFIX))
 
         else:
             await event.message.respond(unknown_command())
