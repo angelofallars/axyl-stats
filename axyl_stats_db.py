@@ -36,21 +36,22 @@ hour.")
 
 def fetch_download_count(repo_owner: str,
                          repo_name: str,
-                         headers: dict) -> int:
+                         headers: dict) -> tuple[int, int]:
 
     request_link = 'https://api.github.com/repos/'\
                    + repo_owner + '/' + repo_name + '/releases'
 
-    total_download_count = 0
-
     r = requests.get(request_link, headers=headers)
     releases = r.json()
+
+    total_download_count = 0
+    latest_release_count = releases[0]['assets'][0]['download_count']
 
     for release in releases:
         if "assets" in release:
             total_download_count += release["assets"][0]["download_count"]
 
-    return total_download_count
+    return total_download_count, latest_release_count
 
 
 def main() -> int:
@@ -86,22 +87,29 @@ def main() -> int:
     while True:
         current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        # Fetch data from the GitHub api
-        download_count = fetch_download_count(REPO_OWNER, REPO_NAME, headers)
+        # Fetch data from the GitHub API (releases)
+        total_downloads, latest_downloads = fetch_download_count(REPO_OWNER,
+                                                                 REPO_NAME,
+                                                                 headers)
 
-        # Insert into PostgreSQL table
-        if download_count is not None:
-            cur.execute("""INSERT INTO download_stats
-                           (repo, total_downloads, date)
-                           VALUES
-                           (%s, %s, CURRENT_TIMESTAMP(0))""",
-                        (repo_name_combined, download_count,))
-            conn.commit()
+        # Fetch from the regular API link (api.github.com/repos/owner/repo)
 
-            print(f"DB updated for `{repo_name_combined}` - {current_date}")
-            print(f"Download count: {download_count}")
-        else:
-            print(f"Couldn't fetch download count - {current_date}")
+        # Get stargazer count
+        # Get watcher count
+        # Get fork count
+
+        cur.execute("""INSERT INTO download_stats
+                       (repo, total_downloads, latest_downloads, date)
+                       VALUES
+                       (%s, %s, %s, CURRENT_TIMESTAMP(0))""",
+                    (repo_name_combined,
+                     total_downloads,
+                     latest_downloads))
+        conn.commit()
+
+        print(f"DB updated for `{repo_name_combined}` - {current_date}")
+        print(f"total_downloads: {total_downloads}")
+        print(f"latest_downloads: {latest_downloads}")
 
         # Wait every (interval) minutes
         time.sleep(DB_UPDATE_INTERVAL * 60)
