@@ -78,8 +78,8 @@ def main() -> int:
                     total_downloads integer,
                     latest_downloads integer,
                     stars integer,
-                    forks integer,
                     watchers integer,
+                    forks integer,
                     date timestamp
                    )""")
     conn.commit()
@@ -92,25 +92,35 @@ def main() -> int:
                                                                  REPO_NAME,
                                                                  headers)
 
-        # Fetch from the regular API link (api.github.com/repos/owner/repo)
+        # Fetch from the regular API link
+        api_request = requests.get(
+                f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}",
+                headers=headers).json()
 
-        # Get stargazer count
-        # Get watcher count
-        # Get fork count
+        stars_count = api_request['stargazers_count']
+        watchers_count = api_request['watchers_count']
+        forks_count = api_request['forks_count']
 
         cur.execute("""INSERT INTO repo_stats
                        (repo, total_downloads, latest_downloads,
-                        stars, forks, watchers, date)
+                        stars, watchers, forks, date)
                        VALUES
-                       (%s, %s, %s, CURRENT_TIMESTAMP(0))""",
+                       (%s, %s, %s, %s, %s, %s,
+                        CURRENT_TIMESTAMP(0))""",
                     (repo_name_combined,
                      total_downloads,
-                     latest_downloads))
+                     latest_downloads,
+                     stars_count,
+                     watchers_count,
+                     forks_count))
         conn.commit()
 
         print(f"DB updated for `{repo_name_combined}` - {current_date}")
         print(f"total_downloads: {total_downloads}")
         print(f"latest_downloads: {latest_downloads}")
+        print(f"stars: {stars_count}")
+        print(f"watchers: {watchers_count}")
+        print(f"forks: {forks_count}")
 
         # Wait every (interval) minutes
         time.sleep(DB_UPDATE_INTERVAL * 60)
