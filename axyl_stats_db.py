@@ -71,7 +71,7 @@ def main() -> int:
     cur = conn.cursor()
 
     # Create the table if it didn't exist
-    cur.execute("""CREATE TABLE IF NOT EXISTS download_stats
+    cur.execute("""CREATE TABLE IF NOT EXISTS repo_stats
                    (
                     repo text,
                     total_downloads integer,
