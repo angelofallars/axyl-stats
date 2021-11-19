@@ -19,6 +19,7 @@ Setting up the bot is done through the `.env` environment variables.
   - [`axyl_stats_bot.py`](#axyl-bot)
   - [`stats-database.py`](#axyl-db)
 - [Running The Bot](#run)
+- [Database Schema](#database)
 - [Testing](#testing)
 - [License](#license)
 
@@ -126,6 +127,40 @@ To run the backend that updates the database with info from the GitHub API:
 ```bash
 python3 axyl_stats_db.py
 ```
+
+<a id="database"></a>
+## Database Schema
+
+In the configured database, `axyl_stats_db.py` will create a table called
+`repo_stats` with the following columns:
+
+- `repo`: The repository the program is set to fetch data from.
+- `total_downloads`: The total number of downloads for every release in the
+Releases section.
+- `latest_downloads`: The number of downloads for the latest release in
+Releases.
+- `stars`
+- `watchers`
+- `forks`
+- `date`: The time the data was fetched.
+
+Example table:
+
+```
+       repo       | total_downloads | latest_downloads | stars | watchers | forks |        date
+------------------+-----------------+------------------+-------+----------+-------+---------------------
+ axyl-os/axyl-iso |            1325 |              349 |    56 |       56 |     2 | 2021-11-19 21:50:52
+ axyl-os/axyl-iso |            1325 |              349 |    56 |       56 |     2 | 2021-11-19 21:55:53
+ axyl-os/axyl-iso |            1325 |              349 |    56 |       56 |     2 | 2021-11-19 22:00:54
+ axyl-os/axyl-iso |            1327 |              351 |    56 |       56 |     2 | 2021-11-19 22:05:56
+ axyl-os/axyl-iso |            1327 |              351 |    56 |       56 |     2 | 2021-11-19 22:10:57
+ axyl-os/axyl-iso |            1327 |              351 |    56 |       56 |     2 | 2021-11-19 22:15:58
+```
+
+You can run `axyl_stats_db.py` without having to run the bot program. In fact,
+you can just run the database program by itself. You then can access the
+PostgreSQL database from another program and perhaps run Matplotlib to visualize
+the growth of your repository.
 
 ## Testing
 
