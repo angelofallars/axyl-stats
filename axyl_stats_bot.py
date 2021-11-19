@@ -95,13 +95,13 @@ The latest release got over **{latest_downloads}** downloads!""")
             await event.message.respond(
              f"""⭐ `{repo_name_combined}` has received over **{stars}** stars!""")
 
-        elif args[1] == "watchers":
-            await event.message.respond(
-             f"""🔭 `{repo_name_combined}` currently has **{watchers}** watchers!""")
-
         elif args[1] == "forks":
             await event.message.respond(
              f"""🌱 `{repo_name_combined}` currently has **{forks}** forks!""")
+
+        elif args[1] == "watchers":
+            await event.message.respond(
+             f"""🔭 `{repo_name_combined}` currently has **{watchers}** watchers!""")
 
         else:
             await event.message.respond(unknown_command())
