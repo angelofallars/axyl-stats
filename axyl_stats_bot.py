@@ -88,7 +88,7 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
 
         if args[1] in ("stats", "downloads"):
             await event.message.respond(
-                  f"""`{repo_name_combined}` has received over **{total_downloads}** downloads!
+             f"""`{repo_name_combined}` has received over **{total_downloads}** downloads!
 The latest release got over **{latest_downloads}** downloads!""")
 
         else:
