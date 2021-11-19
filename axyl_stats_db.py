@@ -10,9 +10,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 # Required .env vars
-DB_NAME = os.getenv("DB_NAME", None)
-REPO_OWNER = os.getenv("REPO_OWNER", None)
-REPO_NAME = os.getenv("REPO_NAME", None)
+DB_NAME = os.getenv("DB_NAME")
+REPO_OWNER = os.getenv("REPO_OWNER")
+REPO_NAME = os.getenv("REPO_NAME")
 
 # Optional .env vars
 DB_USER = os.getenv("DB_USER", None)

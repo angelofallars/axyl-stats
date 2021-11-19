@@ -6,12 +6,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 # Required .env vars
-BOT_TOKEN = os.getenv("BOT_TOKEN", None)
-COUNTER_CHANNEL = os.getenv("COUNTER_CHANNEL", None)
-REPO_OWNER = os.getenv("REPO_OWNER", None)
-REPO_NAME = os.getenv("REPO_NAME", None)
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+COUNTER_CHANNEL = os.getenv("COUNTER_CHANNEL")
+REPO_OWNER = os.getenv("REPO_OWNER")
+REPO_NAME = os.getenv("REPO_NAME")
 
-DB_NAME = os.getenv("DB_NAME", None)
+DB_NAME = os.getenv("DB_NAME")
 
 # Optional .env vars
 INTERVAL = os.getenv("INTERVAL", 60)
