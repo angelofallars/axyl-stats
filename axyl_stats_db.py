@@ -98,7 +98,7 @@ def main() -> int:
         # Get watcher count
         # Get fork count
 
-        cur.execute("""INSERT INTO download_stats
+        cur.execute("""INSERT INTO repo_stats
                        (repo, total_downloads, latest_downloads,
                         stars, forks, watchers, date)
                        VALUES
