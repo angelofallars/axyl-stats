@@ -86,10 +86,23 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
          watchers,
          forks) = fetch_latest_db_stats(cursor)
 
-        if args[1] in ("stats", "downloads"):
+        if args[1] == "stats":
             await event.message.respond(
-             f"""⬇️ `{repo_name_combined}` has received over **{total_downloads}** downloads!
-The latest release got over **{latest_downloads}** downloads!""")
+                    f"""`{repo_name_combined}` stats:
+**⬇️ Downloads (Total)**
+`{total_downloads}`
+**🔥 Downloads (Latest Release)**
+`{latest_downloads}`
+**⭐ Stars**
+`{stars}`
+**🌱 Forks**
+`{forks}`
+**🔭 Watchers**
+`{watchers}`""")
+
+        elif args[1] == "downloads":
+            await event.message.respond(
+                    f"""⬇️ `{repo_name_combined}` has received over **{total_downloads}** total downloads, while the latest release got over **{latest_downloads}** downloads!""")
 
         elif args[1] == "stars":
             await event.message.respond(
