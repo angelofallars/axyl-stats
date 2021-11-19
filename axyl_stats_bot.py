@@ -48,6 +48,34 @@ connection = pgres.connect(database=DB_NAME,
 cursor = connection.cursor()
 
 
+info_commands = {
+                 "stats":
+                 """`{repo_name}` stats:
+**⬇️ Downloads (Total)**
+`{total_downloads}`
+**🔥 Downloads (Latest Release)**
+`{latest_downloads}`
+**⭐ Stars**
+`{stars}`
+**🌱 Forks**
+`{forks}`
+**🔭 Watchers**
+`{watchers}`""",
+
+                 "downloads":
+                 "⬇️ `{repo_name}` has received over **{total_downloads}** total downloads, while the latest release got over **{latest_downloads}** downloads!",
+
+                 "stars":
+                 "⭐ `{repo_name}` has received over **{stars}** stars!",
+
+                 "forks":
+                 "🌱 `{repo_name}` currently has **{forks}** forks!",
+
+                 "watchers":
+                 "🔭 `{repo_name}` currently has **{watchers}** watchers!"
+                 }
+
+
 def unknown_command() -> str:
     return f"❓ Unknown command. Try `{PREFIX} help` for the list of commands."
 
@@ -85,35 +113,16 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
          watchers,
          forks) = fetch_latest_db_stats(cursor)
 
-        if args[1] == "stats":
-            await event.message.respond(
-                    f"""`{repo_name_combined}` stats:
-**⬇️ Downloads (Total)**
-`{total_downloads}`
-**🔥 Downloads (Latest Release)**
-`{latest_downloads}`
-**⭐ Stars**
-`{stars}`
-**🌱 Forks**
-`{forks}`
-**🔭 Watchers**
-`{watchers}`""")
-
-        elif args[1] == "downloads":
-            await event.message.respond(
-             f"""⬇️ `{repo_name_combined}` has received over **{total_downloads}** total downloads, while the latest release got over **{latest_downloads}** downloads!""")
-
-        elif args[1] == "stars":
-            await event.message.respond(
-             f"""⭐ `{repo_name_combined}` has received over **{stars}** stars!""")
-
-        elif args[1] == "forks":
-            await event.message.respond(
-             f"""🌱 `{repo_name_combined}` currently has **{forks}** forks!""")
-
-        elif args[1] == "watchers":
-            await event.message.respond(
-             f"""🔭 `{repo_name_combined}` currently has **{watchers}** watchers!""")
+        if args[1] in info_commands:
+            await event.message.respond(info_commands[args[1]]
+                                        .format(
+                repo_name=repo_name_combined,
+                total_downloads=total_downloads,
+                latest_downloads=latest_downloads,
+                stars=stars,
+                watchers=watchers,
+                forks=forks,
+                ))
 
         else:
             await event.message.respond(unknown_command())
