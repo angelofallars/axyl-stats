@@ -77,9 +77,9 @@ def main() -> int:
                     repo text,
                     total_downloads integer,
                     latest_downloads integer,
-                    star_count integer,
-                    fork_count integer,
-                    watcher_count integer,
+                    stars integer,
+                    forks integer,
+                    watchers integer,
                     date timestamp
                    )""")
     conn.commit()
@@ -99,7 +99,8 @@ def main() -> int:
         # Get fork count
 
         cur.execute("""INSERT INTO download_stats
-                       (repo, total_downloads, latest_downloads, date)
+                       (repo, total_downloads, latest_downloads,
+                        stars, forks, watchers, date)
                        VALUES
                        (%s, %s, %s, CURRENT_TIMESTAMP(0))""",
                     (repo_name_combined,
