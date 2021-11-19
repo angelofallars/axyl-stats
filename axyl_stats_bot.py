@@ -15,6 +15,7 @@ DB_NAME = os.getenv("DB_NAME", None)
 
 # Optional .env vars
 INTERVAL = os.getenv("INTERVAL", 60)
+PREFIX = os.getenv("BOT_PREFIX", ".axyl")
 
 DB_USER = os.getenv("DB_USER", None)
 DB_PASS = os.getenv("DB_PASS", None)
@@ -48,19 +49,31 @@ cur = conn.cursor()
 
 
 @bot.listen()
-async def fetch_download_stats(event: hikari.GuildMessageCreateEvent) -> None:
-    if event.is_bot or not event.content:
+async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
+    if (event.is_bot or not
+       event.content or not
+       event.content.startswith(PREFIX)):
         return
 
-    if event.content.startswith(".stats"):
-        # Fetch the latest download info stats from the database
-        cur.execute("""SELECT total_downloads FROM repo_stats
-                       ORDER BY date DESC LIMIT 1;""")
+    args = event.content[1:].split()
 
-        total_download_count = cur.fetchone()[0]
+    if len(args) > 1:
+        if args[1] == "stats":
+            # Fetch the latest download info stats from the database
+            cur.execute("""SELECT total_downloads, latest_downloads,
+                                  stars, watchers, forks
+                           FROM repo_stats
+                           ORDER BY date DESC LIMIT 1;""")
 
-        await event.message.respond(f"`{repo_name_combined}` has received \
-over {total_download_count} downloads!")
+            (total_downloads,
+             latest_downloads,
+             stars,
+             watchers,
+             forks) = cur.fetchone()
+
+            await event.message.respond(
+                  f"""`{repo_name_combined}` has received over **{total_downloads}** downloads!
+The latest release got over **{latest_downloads}** downloads!""")
 
 
 def main(debug=False) -> int:
