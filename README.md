@@ -1,19 +1,22 @@
 <h1 align=center>📈 axyl-stats</h1>
 
-`axyl-stats` is a Discord bot made with **Python** (with the Hikari API wrapper) and **PostgreSQL**,
-used as a download counter for a GitHub repo.
+`axyl-stats` is a suite of programs for tracking and displaying stats and info about a GitHub repo.
 
-This bot is used to check the download stats of a particular repo either with a
+One is a Discord bot made with **Python** (with the Hikari API wrapper) and uses **PostgreSQL**,
+used as a stats visualizer for a repo. The other is a database program that
+fetches info from the GitHub API and puts it in the SQL database.
+
+The bot is used to check the download stats of a particular repo either with a
 bot command (`.stats`) ~~or automatically in a set interval~~ (TODO).
 
-Setting up this bot is done through the `.env` environment variables.
+Setting up the bot is done through the `.env` environment variables.
 
 ![Python](https://img.shields.io/badge/python-%233776AB.svg?style=for-the-badge&logo=python&logoColor=white) ![Postgres](https://img.shields.io/badge/postgresql-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white) [![Discord](https://img.shields.io/badge/hikari-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)](https://www.hikari-py.dev/)
 
 ## Contents
 - [Overview](#overview)
 - [Setting Up](#setup)
-  - [`axyl-stats.py`](#axyl-bot)
+  - [`axyl_stats_bot.py`](#axyl-bot)
   - [`stats-database.py`](#axyl-db)
 - [Running The Bot](#run)
 - [Testing](#testing)
@@ -52,7 +55,7 @@ in there.
 The environment variables that axyl-stats will use are:
 
 <a id="axyl-bot"></a>
-## `axyl-stats.py`
+## `axyl_stats_bot.py`
 
 ### Required
 - `BOT_TOKEN`: The Discord bot's API token. Make a new Discord application in
@@ -73,9 +76,9 @@ channels are separated with a comma (,).
 - `DB_PORT` (default `5432`): The port of the DB.
 
 <a id="axyl-db"></a>
-## `stats-database.py`
+## `axyl_stats_db.py`
 
-To run the database testing, you must also put in the `.env` file:
+To run the database module, you must also put in the `.env` file:
 
 ### Required
 
@@ -115,12 +118,12 @@ DB_PASS=hunter2
 
 To run the bot:
 ```bash
-python3 axyl_stats.py
+python3 axyl_stats_bot.py
 ```
 
 To run the backend that updates the database with info from the GitHub API:
 ```bash
-python3 stats_database.py
+python3 axyl_stats_db.py
 ```
 
 ## Testing
