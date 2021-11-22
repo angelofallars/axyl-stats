@@ -63,16 +63,22 @@ info_commands = {
 `{watchers}`""",
 
                  "downloads":
-                 "⬇️ `{repo_name}` has received over **{total_downloads}** total downloads, while the latest release got over **{latest_downloads}** downloads!",
+                 """**⬇️ Downloads (Total)** - `{repo_name}`
+`{total_downloads}`
+**🔥 Downloads (Latest Release)**
+`{latest_downloads}`""",
 
                  "stars":
-                 "⭐ `{repo_name}` has received over **{stars}** stars!",
+                 """**⭐ Stars** - `{repo_name}`
+`{stars}`""",
 
                  "forks":
-                 "🌱 `{repo_name}` currently has **{forks}** forks!",
+                 """**🌱 Forks** - `{repo_name}`
+`{forks}`""",
 
                  "watchers":
-                 "🔭 `{repo_name}` currently has **{watchers}** watchers!"
+                 """**🔭 Watchers** - `{repo_name}`
+`{watchers}`""",
                  }
 
 
