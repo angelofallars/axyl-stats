@@ -28,7 +28,7 @@ Setting up the bot is done through the `.env` environment variables.
 
 Right now, the bot's functionality is like this:
 
-![axyl-stats image](https://i.imgur.com/LNjFNpE.png)
+![axyl-stats image](https://user-images.githubusercontent.com/39676098/142674295-40a3a649-551a-43b9-8f76-f60e4cfd2411.png)
 
 <a id="setup"></a>
 ## Setting Up
@@ -65,12 +65,12 @@ it. You will see the copyable token.
 - `REPO_OWNER`: The owner of the repo.
 - `REPO_NAME`: The name of the repo.
 - `DB_NAME`: The database to fetch data from.
-  - You must create a database in `PostgreSQL` first with the name `DB_NAME` before you can run this app.
+  - You must create a database in `PostgreSQL` first with the name you will put in `DB_NAME` before you can run this app.
 - `COUNTER_CHANNEL`: The Discord channel(s) to send automated statistics to. Multiple
 channels are separated with a comma (,).
 
 ### Optional
-- `BOT_PREFIX` (default `.stats`): The prefix of the bot for commands
+- `BOT_PREFIX` (default `.stats`): The prefix of the bot for commands.
 - `INTERVAL` (default `60`): The interval in minutes in which the bot will fetch the download stats.
 - `DB_USER`: The user logging into the DB.
 - `DB_PASS`: The DB password.
