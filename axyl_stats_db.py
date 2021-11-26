@@ -1,4 +1,4 @@
-"""Periodically fetch the download count of a repo every (INTERVAL) minutes,
+"""Fetch the download count of a repo,
    and store it in a PostgreSQL database"""
 import os
 from datetime import datetime

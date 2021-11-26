@@ -96,8 +96,6 @@ have an API key, you'll be limited to 60 requests per hour.
 - `DB_PASS`: Ditto.
 - `DB_HOST`: Ditto.
 - `DB_PORT`: Ditto.
-- `DB_UPDATE_INTERVAL` (default `5`): The interval (in minutes) to update the
-database.
 
 ## `.env` example
 
@@ -123,10 +121,17 @@ To run the bot:
 python3 axyl_stats_bot.py
 ```
 
-To run the backend that updates the database with info from the GitHub API:
+To run the program that updates the database with info from the GitHub API, you
+need to execute:
 ```bash
 python3 axyl_stats_db.py
 ```
+
+However, this will only create the database (if running for the first time) and
+insert only one row of data for the current time. If you want more rows of data,
+you need to run the bot again. If you want to periodically fetch data from the
+GitHub API every set interval like 10 minutes, 30 minutes or an hour, it is
+recommended to use [cron jobs](https://www.hostinger.com/tutorials/cron-job).
 
 <a id="database"></a>
 ## Database Schema
