@@ -40,6 +40,27 @@ class Connection:
         return rows
 
 
+def insert_into_database(connection: Connection,
+                         repo_name: str,
+                         total_downloads: int,
+                         latest_downloads: int,
+                         stars_count: int,
+                         watchers_count: int,
+                         forks_count: int) -> None:
+    connection.execute("""INSERT INTO repo_stats
+                       (repo, total_downloads, latest_downloads,
+                        stars, watchers, forks, date)
+                       VALUES
+                       (%s, %s, %s, %s, %s, %s,
+                        CURRENT_TIMESTAMP(0))""",
+                       (repo_name,
+                        total_downloads,
+                        latest_downloads,
+                        stars_count,
+                        watchers_count,
+                        forks_count))
+
+
 def fetch_download_count(repo_owner: str,
                          repo_name: str,
                          headers: dict = None) -> tuple[int, int]:
@@ -67,27 +88,6 @@ def fetch_regular_info(repo_owner: str,
                   f"https://api.github.com/repos/{repo_owner}/{repo_name}",
                   headers=headers).json()
     return api_request
-
-
-def insert_into_database(connection: Connection,
-                         repo_name: str,
-                         total_downloads: int,
-                         latest_downloads: int,
-                         stars_count: int,
-                         watchers_count: int,
-                         forks_count: int) -> None:
-    connection.execute("""INSERT INTO repo_stats
-                       (repo, total_downloads, latest_downloads,
-                        stars, watchers, forks, date)
-                       VALUES
-                       (%s, %s, %s, %s, %s, %s,
-                        CURRENT_TIMESTAMP(0))""",
-                       (repo_name,
-                        total_downloads,
-                        latest_downloads,
-                        stars_count,
-                        watchers_count,
-                        forks_count))
 
 
 def main() -> int:
