@@ -44,11 +44,14 @@ def main() -> int:
     GITHUB_API_KEY = os.getenv("GITHUB_API_KEY")
 
     if DB_NAME is None:
-        raise Exception("Database name (DB_NAME) not set in the '.env' file.")
+        print("Database name (DB_NAME) not set in the '.env' file.")
+        return 1
     elif REPO_OWNER is None:
-        raise Exception("No REPO_OWNER set in the .env file.")
+        print("No REPO_OWNER set in the .env file.")
+        return 1
     elif REPO_NAME is None:
-        raise Exception("No REPO_NAME set in the .env file.")
+        print("No REPO_NAME set in the .env file.")
+        return 1
     elif GITHUB_API_KEY is None:
         print("Warning: No GitHub API key. You will be limited to 60 requests \
 per hour.")
