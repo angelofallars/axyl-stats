@@ -167,11 +167,6 @@ you can just run the database program by itself. You then can access the
 PostgreSQL database from another program and perhaps run Matplotlib to visualize
 the growth of your repository.
 
-## Testing
-
-~~To be able to unit test the bot, you must also specify a `TEST_BOT_TOKEN` in the .env
-file.~~ (Tests not yet implemented)
-
 ## License
 
 This program is licensed under the GPLv3 License.
