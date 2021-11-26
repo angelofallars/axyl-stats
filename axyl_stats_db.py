@@ -60,13 +60,13 @@ def fetch_download_count(repo_owner: str,
     return total_download_count, latest_release_count
 
 
-def update_database(connection: Connection,
-                    repo_name: str,
-                    total_downloads: int,
-                    latest_downloads: int,
-                    stars_count: int,
-                    watchers_count: int,
-                    forks_count: int) -> None:
+def insert_into_database(connection: Connection,
+                         repo_name: str,
+                         total_downloads: int,
+                         latest_downloads: int,
+                         stars_count: int,
+                         watchers_count: int,
+                         forks_count: int) -> None:
     connection.execute("""INSERT INTO repo_stats
                        (repo, total_downloads, latest_downloads,
                         stars, watchers, forks, date)
