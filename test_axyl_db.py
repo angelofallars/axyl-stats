@@ -129,6 +129,13 @@ class TestAPITools(unittest.TestCase):
         self.assertEqual(type(latest_downloads), int)
         self.assertEqual(downloads >= latest_downloads, True)
 
+    def test_regular_info(self):
+        data = axdb.fetch_regular_info("axyl-os", "axyl-iso")
+
+        for entry in ['stargazers_count', 'watchers_count', 'forks_count']:
+            self.assertEqual(entry in data, True)
+            self.assertEqual(type(data[entry]), int)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -60,6 +60,15 @@ def fetch_download_count(repo_owner: str,
     return total_download_count, latest_release_count
 
 
+def fetch_regular_info(repo_owner: str,
+                       repo_name: str,
+                       headers: dict = None) -> dict:
+    api_request = requests.get(
+                  f"https://api.github.com/repos/{repo_owner}/{repo_name}",
+                  headers=headers).json()
+    return api_request
+
+
 def insert_into_database(connection: Connection,
                          repo_name: str,
                          total_downloads: int,
@@ -142,13 +151,11 @@ per hour.")
                                                              headers)
 
     # Fetch from the regular API link
-    api_request = requests.get(
-                  f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}",
-                  headers=headers).json()
+    repo_info = fetch_regular_info(REPO_OWNER, REPO_NAME, headers)
 
-    stars_count = api_request['stargazers_count']
-    watchers_count = api_request['watchers_count']
-    forks_count = api_request['forks_count']
+    stars_count = repo_info['stargazers_count']
+    watchers_count = repo_info['watchers_count']
+    forks_count = repo_info['forks_count']
 
     insert_into_database(connection=conn,
                          repo_name=repo_name_combined,
