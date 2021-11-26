@@ -150,18 +150,13 @@ per hour.")
     watchers_count = api_request['watchers_count']
     forks_count = api_request['forks_count']
 
-    conn.execute("""INSERT INTO repo_stats
-                   (repo, total_downloads, latest_downloads,
-                    stars, watchers, forks, date)
-                   VALUES
-                   (%s, %s, %s, %s, %s, %s,
-                    CURRENT_TIMESTAMP(0))""",
-                 (repo_name_combined,
-                  total_downloads,
-                  latest_downloads,
-                  stars_count,
-                  watchers_count,
-                  forks_count))
+    insert_into_database(connection=conn,
+                         repo_name=repo_name_combined,
+                         total_downloads=total_downloads,
+                         latest_downloads=latest_downloads,
+                         stars_count=stars_count,
+                         watchers_count=watchers_count,
+                         forks_count=forks_count)
 
     print(f"DB updated for `{repo_name_combined}` - {current_date}")
     print(f"total_downloads: {total_downloads}")
