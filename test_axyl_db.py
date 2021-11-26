@@ -164,7 +164,7 @@ class TestAPITools(unittest.TestCase):
 
         self.assertEqual(type(downloads), int)
         self.assertEqual(type(latest_downloads), int)
-        self.assertEqual(downloads >= latest_downloads, True)
+        self.assertGreaterEqual(downloads, latest_downloads)
 
     def test_regular_info(self):
         data = axdb.fetch_regular_info("axyl-os", "axyl-iso")
@@ -172,6 +172,63 @@ class TestAPITools(unittest.TestCase):
         for entry in ['stargazers_count', 'watchers_count', 'forks_count']:
             self.assertEqual(entry in data, True)
             self.assertEqual(type(data[entry]), int)
+
+
+class TestIntegration(unittest.TestCase):
+
+    def setUp(self):
+        self.conn = axdb.Connection(db_name="test_db")
+        self.conn.execute("DROP TABLE IF EXISTS repo_stats")
+
+        self.repo_owner: str = "axyl-os"
+        self.repo_name: str = "axyl-iso"
+        self.repo_name_combined: str = "axyl-os/axyl-iso"
+
+    def test_integration(self):
+        axdb.create_stats_table(self.conn)
+
+        # Fetch data from the GitHub API (releases)
+        total_dls, latest_dls = axdb.fetch_download_count("axyl-os",
+                                                          "axyl-iso")
+
+        # Fetch from the regular API link
+        repo_info = axdb.fetch_regular_info(self.repo_owner,
+                                            self.repo_name,)
+
+        stars_count = repo_info['stargazers_count']
+        watchers_count = repo_info['watchers_count']
+        forks_count = repo_info['forks_count']
+
+        axdb.insert_into_database(connection=self.conn,
+                                  repo_name=self.repo_name_combined,
+                                  total_downloads=total_dls,
+                                  latest_downloads=latest_dls,
+                                  stars_count=stars_count,
+                                  watchers_count=watchers_count,
+                                  forks_count=forks_count)
+
+        # Set up the values to test
+        rows: list = self.conn.execute("""SELECT
+                                                 repo,
+                                                 total_downloads,
+                                                 latest_downloads,
+                                                 stars,
+                                                 watchers,
+                                                 forks
+                                          FROM
+                                                 repo_stats""")[0]
+
+        self.assertEqual(rows[0], 'axyl-os/axyl-iso')
+
+        # Total downloads must be more than or equal to latest downloads
+        self.assertGreaterEqual(rows[1], rows[2])
+
+        # Every other row listed in the query must be an integer
+        for row in rows[1:]:
+            self.assertEqual(type(row), int)
+
+    def tearDown(self):
+        self.conn.execute("DROP TABLE IF EXISTS repo_stats")
 
 
 if __name__ == "__main__":
