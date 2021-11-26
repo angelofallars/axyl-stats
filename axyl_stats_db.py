@@ -19,12 +19,12 @@ class Connection:
                  port: str = None) -> None:
 
         # Initialize the connection to the PostgreSQL db
-        self.connection = pgres.connect(database=db_name,
-                                        user=username,
-                                        password=password,
-                                        host=host,
-                                        port=port)
-        self.cursor = self.connection.cursor()
+        self.connection: pgres.connection = pgres.connect(database=db_name,
+                                                          user=username,
+                                                          password=password,
+                                                          host=host,
+                                                          port=port)
+        self.cursor: pgres.cursor = self.connection.cursor()
 
     def execute(self,
                 statement: str,
@@ -44,11 +44,11 @@ def fetch_download_count(repo_owner: str,
                          repo_name: str,
                          headers: dict = None) -> tuple[int, int]:
 
-    request_link = 'https://api.github.com/repos/'\
-                   + repo_owner + '/' + repo_name + '/releases'
+    request_link: str = 'https://api.github.com/repos/'\
+                        + repo_owner + '/' + repo_name + '/releases'
 
-    r = requests.get(request_link, headers=headers)
-    releases = r.json()
+    r: requests.Response = requests.get(request_link, headers=headers)
+    releases: list = r.json()
 
     total_download_count = 0
     latest_release_count = releases[0]['assets'][0]['download_count']
@@ -109,7 +109,7 @@ def main() -> int:
         print("Warning: No GitHub API key. You will be limited to 60 requests \
 per hour.")
 
-    headers = {}
+    headers: dict = {}
     if GITHUB_API_KEY:
         headers["Authorization"] = f"token {GITHUB_API_KEY}"
 
@@ -134,7 +134,7 @@ per hour.")
                     date timestamp
                    )""")
 
-    current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    current_date: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # Fetch data from the GitHub API (releases)
     total_downloads, latest_downloads = fetch_download_count(REPO_OWNER,
