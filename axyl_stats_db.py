@@ -40,6 +40,19 @@ class Connection:
         return rows
 
 
+def create_stats_table(connection: Connection) -> None:
+    connection.execute("""CREATE TABLE IF NOT EXISTS repo_stats
+                          (
+                           repo text,
+                           total_downloads integer,
+                           latest_downloads integer,
+                           stars integer,
+                           watchers integer,
+                           forks integer,
+                           date timestamp
+                          )""")
+
+
 def insert_into_database(connection: Connection,
                          repo_name: str,
                          total_downloads: int,
@@ -132,16 +145,7 @@ per hour.")
                       port=DB_PORT)
 
     # Create the table if it didn't exist
-    conn.execute("""CREATE TABLE IF NOT EXISTS repo_stats
-                   (
-                    repo text,
-                    total_downloads integer,
-                    latest_downloads integer,
-                    stars integer,
-                    watchers integer,
-                    forks integer,
-                    date timestamp
-                   )""")
+    create_stats_table(conn)
 
     current_date: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 

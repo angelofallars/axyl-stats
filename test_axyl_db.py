@@ -113,6 +113,43 @@ class TestDatabase(unittest.TestCase):
                                         latest_downloads, stars_count,
                                         watchers_count, forks_count))
 
+    def test_create_table_exists(self):
+        axdb.create_stats_table(self.conn)
+
+        # Check if the repo_stats table exists
+        repo_stats_exists: bool = self.conn.execute("""
+                SELECT EXISTS ( SELECT *
+                FROM pg_tables WHERE schemaname = 'public' AND tablename =
+                'repo_stats' )""")[0][0]
+
+        self.assertEqual(repo_stats_exists, True)
+
+    def test_create_table_columns(self):
+        axdb.create_stats_table(self.conn)
+
+        expected_columns: dict = {'repo': 'text',
+                                  'total_downloads': 'integer',
+                                  'latest_downloads': 'integer',
+                                  'stars': 'integer',
+                                  'watchers': 'integer',
+                                  'forks': 'integer',
+                                  'date': 'timestamp without time zone'}
+
+        columns: list = self.conn.execute("""SELECT column_name, data_type
+                                             FROM INFORMATION_SCHEMA.COLUMNS
+                                             WHERE table_name='repo_stats'""")
+
+        column_names: list = [column[0] for column in columns]
+        column_types: list = [column[1] for column in columns]
+
+        for i in range(len(column_names)):
+            self.assertEqual(column_names[i]
+                             in expected_columns.keys(),
+                             True)
+            self.assertEqual(column_types[i]
+                             in expected_columns.values(),
+                             True)
+
     def tearDown(self):
         self.conn.execute("DROP TABLE IF EXISTS repo_stats")
         self.conn.execute("DROP TABLE IF EXISTS test_table")
