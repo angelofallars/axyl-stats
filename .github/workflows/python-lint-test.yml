@@ -25,6 +25,8 @@ jobs:
       run: |
         sudo apt-get install -y postgresql
         sudo pg_ctlcluster 12 main start
+        systemctl enable postgresql.service
+        systemctl start postgresql.service
         createdb test_db
     - name: Lint with flake8
       run: |
