@@ -1,7 +1,6 @@
 """Periodically fetch the download count of a repo every (INTERVAL) minutes,
    and store it in a PostgreSQL database"""
 import os
-import time
 from datetime import datetime
 
 import psycopg2 as pgres
@@ -19,7 +18,6 @@ DB_USER = os.getenv("DB_USER", None)
 DB_PASS = os.getenv("DB_PASS", None)
 DB_HOST = os.getenv("DB_HOST", "127.0.0.1")
 DB_PORT = os.getenv("DB_PORT", "5432")
-DB_UPDATE_INTERVAL = int(os.getenv("DB_UPDATE_INTERVAL", 5))
 
 GITHUB_API_KEY = os.getenv("GITHUB_API_KEY")
 
@@ -84,46 +82,42 @@ def main() -> int:
                    )""")
     conn.commit()
 
-    while True:
-        current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        # Fetch data from the GitHub API (releases)
-        total_downloads, latest_downloads = fetch_download_count(REPO_OWNER,
-                                                                 REPO_NAME,
-                                                                 headers)
+    # Fetch data from the GitHub API (releases)
+    total_downloads, latest_downloads = fetch_download_count(REPO_OWNER,
+                                                             REPO_NAME,
+                                                             headers)
 
-        # Fetch from the regular API link
-        api_request = requests.get(
-                f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}",
-                headers=headers).json()
+    # Fetch from the regular API link
+    api_request = requests.get(
+            f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}",
+            headers=headers).json()
 
-        stars_count = api_request['stargazers_count']
-        watchers_count = api_request['watchers_count']
-        forks_count = api_request['forks_count']
+    stars_count = api_request['stargazers_count']
+    watchers_count = api_request['watchers_count']
+    forks_count = api_request['forks_count']
 
-        cur.execute("""INSERT INTO repo_stats
-                       (repo, total_downloads, latest_downloads,
-                        stars, watchers, forks, date)
-                       VALUES
-                       (%s, %s, %s, %s, %s, %s,
-                        CURRENT_TIMESTAMP(0))""",
-                    (repo_name_combined,
-                     total_downloads,
-                     latest_downloads,
-                     stars_count,
-                     watchers_count,
-                     forks_count))
-        conn.commit()
+    cur.execute("""INSERT INTO repo_stats
+                   (repo, total_downloads, latest_downloads,
+                    stars, watchers, forks, date)
+                   VALUES
+                   (%s, %s, %s, %s, %s, %s,
+                    CURRENT_TIMESTAMP(0))""",
+                (repo_name_combined,
+                 total_downloads,
+                 latest_downloads,
+                 stars_count,
+                 watchers_count,
+                 forks_count))
+    conn.commit()
 
-        print(f"DB updated for `{repo_name_combined}` - {current_date}")
-        print(f"total_downloads: {total_downloads}")
-        print(f"latest_downloads: {latest_downloads}")
-        print(f"stars: {stars_count}")
-        print(f"watchers: {watchers_count}")
-        print(f"forks: {forks_count}")
-
-        # Wait every (interval) minutes
-        time.sleep(DB_UPDATE_INTERVAL * 60)
+    print(f"DB updated for `{repo_name_combined}` - {current_date}")
+    print(f"total_downloads: {total_downloads}")
+    print(f"latest_downloads: {latest_downloads}")
+    print(f"stars: {stars_count}")
+    print(f"watchers: {watchers_count}")
+    print(f"forks: {forks_count}")
 
     return 0
 
