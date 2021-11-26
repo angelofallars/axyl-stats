@@ -8,6 +8,38 @@ import requests
 from dotenv import load_dotenv
 
 
+# Connection to the PostgreSQL database
+class Connection:
+
+    def __init__(self,
+                 db_name: str,
+                 username: str = None,
+                 password: str = None,
+                 host: str = None,
+                 port: str = None) -> None:
+
+        # Initialize the connection to the PostgreSQL db
+        self.connection = pgres.connect(database=db_name,
+                                        user=username,
+                                        password=password,
+                                        host=host,
+                                        port=port)
+        self.cursor = self.connection.cursor()
+
+    def execute(self,
+                statement: str,
+                placeholders: tuple = None) -> list:
+        self.cursor.execute(statement, placeholders)
+        self.connection.commit()
+
+        try:
+            rows: list = self.cursor.fetchall()
+        except pgres.ProgrammingError:
+            rows: list = []
+
+        return rows
+
+
 def fetch_download_count(repo_owner: str,
                          repo_name: str,
                          headers: dict) -> tuple[int, int]:
@@ -26,6 +58,27 @@ def fetch_download_count(repo_owner: str,
             total_download_count += release["assets"][0]["download_count"]
 
     return total_download_count, latest_release_count
+
+
+def update_database(connection: Connection,
+                    repo_name: str,
+                    total_downloads: int,
+                    latest_downloads: int,
+                    stars_count: int,
+                    watchers_count: int,
+                    forks_count: int) -> None:
+    connection.execute("""INSERT INTO repo_stats
+                       (repo, total_downloads, latest_downloads,
+                        stars, watchers, forks, date)
+                       VALUES
+                       (%s, %s, %s, %s, %s, %s,
+                        CURRENT_TIMESTAMP(0))""",
+                       (repo_name,
+                        total_downloads,
+                        latest_downloads,
+                        stars_count,
+                        watchers_count,
+                        forks_count))
 
 
 def main() -> int:
@@ -63,17 +116,14 @@ per hour.")
     repo_name_combined = REPO_OWNER + '/' + REPO_NAME
 
     # Initialize the connection to the PostgreSQL db
-    conn = pgres.connect(database=DB_NAME,
-                         user=DB_USER,
-                         password=DB_PASS,
-                         host=DB_HOST,
-                         port=DB_PORT)
-
-    # Initialize the cursor
-    cur = conn.cursor()
+    conn = Connection(db_name=DB_NAME,
+                      username=DB_USER,
+                      password=DB_PASS,
+                      host=DB_HOST,
+                      port=DB_PORT)
 
     # Create the table if it didn't exist
-    cur.execute("""CREATE TABLE IF NOT EXISTS repo_stats
+    conn.execute("""CREATE TABLE IF NOT EXISTS repo_stats
                    (
                     repo text,
                     total_downloads integer,
@@ -83,7 +133,6 @@ per hour.")
                     forks integer,
                     date timestamp
                    )""")
-    conn.commit()
 
     current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -101,19 +150,18 @@ per hour.")
     watchers_count = api_request['watchers_count']
     forks_count = api_request['forks_count']
 
-    cur.execute("""INSERT INTO repo_stats
+    conn.execute("""INSERT INTO repo_stats
                    (repo, total_downloads, latest_downloads,
                     stars, watchers, forks, date)
                    VALUES
                    (%s, %s, %s, %s, %s, %s,
                     CURRENT_TIMESTAMP(0))""",
-                (repo_name_combined,
-                 total_downloads,
-                 latest_downloads,
-                 stars_count,
-                 watchers_count,
-                 forks_count))
-    conn.commit()
+                 (repo_name_combined,
+                  total_downloads,
+                  latest_downloads,
+                  stars_count,
+                  watchers_count,
+                  forks_count))
 
     print(f"DB updated for `{repo_name_combined}` - {current_date}")
     print(f"total_downloads: {total_downloads}")
