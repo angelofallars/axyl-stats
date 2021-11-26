@@ -25,9 +25,12 @@ jobs:
       run: |
         sudo apt-get install -y postgresql
         sudo -u postgres pg_ctlcluster 12 main start
+
         sudo systemctl enable postgresql.service
         sudo systemctl start postgresql.service
-        sudo -u postgres createdb test_db
+
+        sudo -u postgres createuser runner --createdb
+        createdb test_db
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
