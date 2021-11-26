@@ -143,8 +143,8 @@ per hour.")
 
     # Fetch from the regular API link
     api_request = requests.get(
-            f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}",
-            headers=headers).json()
+                  f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}",
+                  headers=headers).json()
 
     stars_count = api_request['stargazers_count']
     watchers_count = api_request['watchers_count']
