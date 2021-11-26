@@ -42,7 +42,7 @@ class Connection:
 
 def fetch_download_count(repo_owner: str,
                          repo_name: str,
-                         headers: dict) -> tuple[int, int]:
+                         headers: dict = None) -> tuple[int, int]:
 
     request_link = 'https://api.github.com/repos/'\
                    + repo_owner + '/' + repo_name + '/releases'
