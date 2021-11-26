@@ -23,7 +23,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Install and set up PostgreSQL
       run: |
-        apt-get install -y postgresql
+        sudo apt-get install -y postgresql
         pg_ctlcluster 12 main start
         createdb test_db
     - name: Lint with flake8
