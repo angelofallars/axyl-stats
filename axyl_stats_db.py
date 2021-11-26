@@ -7,30 +7,6 @@ import psycopg2 as pgres
 import requests
 from dotenv import load_dotenv
 
-load_dotenv()
-# Required .env vars
-DB_NAME = os.getenv("DB_NAME")
-REPO_OWNER = os.getenv("REPO_OWNER")
-REPO_NAME = os.getenv("REPO_NAME")
-
-# Optional .env vars
-DB_USER = os.getenv("DB_USER", None)
-DB_PASS = os.getenv("DB_PASS", None)
-DB_HOST = os.getenv("DB_HOST", "127.0.0.1")
-DB_PORT = os.getenv("DB_PORT", "5432")
-
-GITHUB_API_KEY = os.getenv("GITHUB_API_KEY")
-
-if DB_NAME is None:
-    raise Exception("Database name (DB_NAME) not set in the '.env' file.")
-elif REPO_OWNER is None:
-    raise Exception("No REPO_OWNER set in the .env file.")
-elif REPO_NAME is None:
-    raise Exception("No REPO_NAME set in the .env file.")
-elif GITHUB_API_KEY is None:
-    print("Warning: No GitHub API key. You will be limited to 60 requests per \
-hour.")
-
 
 def fetch_download_count(repo_owner: str,
                          repo_name: str,
@@ -53,6 +29,30 @@ def fetch_download_count(repo_owner: str,
 
 
 def main() -> int:
+    load_dotenv()
+    # Required .env vars
+    DB_NAME = os.getenv("DB_NAME")
+    REPO_OWNER = os.getenv("REPO_OWNER")
+    REPO_NAME = os.getenv("REPO_NAME")
+
+    # Optional .env vars
+    DB_USER = os.getenv("DB_USER", None)
+    DB_PASS = os.getenv("DB_PASS", None)
+    DB_HOST = os.getenv("DB_HOST", "127.0.0.1")
+    DB_PORT = os.getenv("DB_PORT", "5432")
+
+    GITHUB_API_KEY = os.getenv("GITHUB_API_KEY")
+
+    if DB_NAME is None:
+        raise Exception("Database name (DB_NAME) not set in the '.env' file.")
+    elif REPO_OWNER is None:
+        raise Exception("No REPO_OWNER set in the .env file.")
+    elif REPO_NAME is None:
+        raise Exception("No REPO_NAME set in the .env file.")
+    elif GITHUB_API_KEY is None:
+        print("Warning: No GitHub API key. You will be limited to 60 requests \
+per hour.")
+
     headers = {}
     if GITHUB_API_KEY:
         headers["Authorization"] = f"token {GITHUB_API_KEY}"
